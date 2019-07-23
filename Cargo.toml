@@ -1,5 +1,5 @@
 [package]
-name = "dragonTail"
+name = "dragon_tail"
 version = "0.1.0"
 authors = ["wataru-script"]
 edition = "2018"
