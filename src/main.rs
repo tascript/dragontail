@@ -1,6 +1,8 @@
 extern crate getopts;
 use getopts::Options;
 use std::env;
+use std::fs::File;
+use std::io::prelude::*;
 use std::process;
 
 fn main() {
