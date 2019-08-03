@@ -14,10 +14,20 @@ fn main() {
     opts.optopt("w", "word", "highliht the word", "WORD");
 
     match args.len() {
-        2 => println!("collect args. {}", &args[1]),
+        2 => {
+            let _ = tail_all(&args[1]);
+        }
         _ => {
             println!("Error: set file as args. (ex: dtail <FILE_NAME>)");
             process::exit(1);
         }
     }
+}
+
+fn tail_all(file_name: &String) -> std::io::Result<()> {
+    let mut file = File::open(file_name)?;
+    let mut contents = String::new();
+    file.read_to_string(&mut contents)?;
+    println!("{}", contents);
+    Ok(())
 }
