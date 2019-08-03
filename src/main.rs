@@ -16,7 +16,7 @@ fn main() {
     match args.len() {
         2 => match tail_all(&args[1]) {
             Ok(()) => (),
-            Err(err) => println!("Error: {:?}", err.to_string()),
+            Err(err) => println!("Error: {}", err.to_string()),
         },
         _ => {
             println!("Error: set file as args. (ex: dtail <FILE_NAME>)");
