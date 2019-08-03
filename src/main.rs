@@ -14,9 +14,10 @@ fn main() {
     opts.optopt("w", "word", "highliht the word", "WORD");
 
     match args.len() {
-        2 => {
-            let _ = tail_all(&args[1]);
-        }
+        2 => match tail_all(&args[1]) {
+            Ok(()) => (),
+            Err(err) => println!("Error: {:?}", err.to_string()),
+        },
         _ => {
             println!("Error: set file as args. (ex: dtail <FILE_NAME>)");
             process::exit(1);
