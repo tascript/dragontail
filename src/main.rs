@@ -24,7 +24,7 @@ fn main() {
     }
 }
 
-fn tail_all(file_name: &String) -> std::io::Result<()> {
+fn tail_all(file_name: &String) -> Result<(), std::io::Error> {
     let mut file = File::open(file_name)?;
     let mut contents = String::new();
     file.read_to_string(&mut contents)?;
