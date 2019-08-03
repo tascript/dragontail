@@ -1,17 +1,19 @@
 extern crate getopts;
 use getopts::Options;
 use std::env;
+use std::process;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
     let mut opts = Options::new();
     opts.optopt("c", "color", "change color to string ", "COLOR");
     opts.optopt("w", "word", "highliht the word", "WORD");
-    println!("{:?}", args);
 
     match args.len() {
-        1 => println!("specify target file."),
         2 => println!("collect args."),
-        _ => println!("wrong args."),
+        _ => {
+            println!("Error: set file as args. (ex: dtail <FILE_NAME>)");
+            process::exit(1);
+        }
     }
 }
