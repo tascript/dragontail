@@ -14,7 +14,7 @@ fn main() {
     opts.optopt("w", "word", "highliht the word", "WORD");
 
     match args.len() {
-        2 => println!("collect args."),
+        2 => println!("collect args. {}", &args[1]),
         _ => {
             println!("Error: set file as args. (ex: dtail <FILE_NAME>)");
             process::exit(1);
