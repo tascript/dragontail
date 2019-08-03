@@ -6,8 +6,8 @@ use std::process;
 fn main() {
     let args: Vec<String> = env::args().collect();
     let mut opts = Options::new();
-    opts.optopt("-n", "", "specify line of file", "LINE");
-    opts.optopt("-f", "", "follow　postscript", "FOLLOW");
+    opts.optflag("n", "", "number of lines");
+    opts.optflag("f", "", "follow　postscript");
     opts.optopt("c", "color", "change color to string", "COLOR");
     opts.optopt("w", "word", "highliht the word", "WORD");
 
