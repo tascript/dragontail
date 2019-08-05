@@ -27,7 +27,7 @@ fn main() {
         1
     };
     match tail_all(&args[1]) {
-        Ok(()) => println!("{}", line),
+        Ok(()) => (),
         Err(err) => println!("Error: {}", err.to_string()),
     }
 }
