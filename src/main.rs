@@ -12,11 +12,11 @@ fn main() {
     opts.optflag("f", "", "follow　postscript");
     opts.optopt("c", "color", "change color to string", "COLOR");
     opts.optopt("w", "word", "highliht the word", "WORD");
-    let options = match opts.parse(&args[1..]) {
+    let cmd_options = match opts.parse(&args[1..]) {
         Ok(m) => m,
         Err(f) => panic!(f.to_string()),
     };
-    println!("{:?}", options);
+    println!("{:?}", cmd_options);
 
     match args.len() {
         2 => match tail_all(&args[1]) {
