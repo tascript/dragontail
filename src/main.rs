@@ -12,21 +12,23 @@ fn main() {
     opts.optflag("f", "", "follow　postscript");
     opts.optopt("c", "color", "change color to string", "COLOR");
     opts.optopt("w", "word", "highliht the word", "WORD");
-    let cmd_options = match opts.parse(&args[1..]) {
-        Ok(m) => m,
-        Err(f) => panic!(f.to_string()),
-    };
-    println!("{:?}", cmd_options);
 
-    match args.len() {
-        2 => match tail_all(&args[1]) {
-            Ok(()) => (),
-            Err(err) => println!("Error: {}", err.to_string()),
-        },
-        _ => {
-            println!("Error: set file as args. (ex: dtail <FILE_NAME>)");
-            process::exit(1);
-        }
+    let arguments = match opts.parse(&args[1..]) {
+        Ok(m) => m,
+        Err(why) => panic!("Error: {}", why),
+    };
+    let line = if arguments.opt_present("n") {
+        let l = match arguments.opt_str("n") {
+            Some(num) => num,
+            None => panic!("check your number of lines."),
+        };
+        l.parse().unwrap()
+    } else {
+        1
+    };
+    match tail_all(&args[1]) {
+        Ok(()) => (),
+        Err(err) => println!("Error: {}", err.to_string()),
     }
 }
 
