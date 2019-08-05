@@ -8,8 +8,8 @@ use std::process;
 fn main() {
     let args: Vec<String> = env::args().collect();
     let mut opts = Options::new();
-    opts.optflag("n", "", "number of lines");
     opts.optflag("f", "", "follow　postscript");
+    opts.optopt("n", "number", "number of lines", "NUMBER");
     opts.optopt("c", "color", "change color to string", "COLOR");
     opts.optopt("w", "word", "highliht the word", "WORD");
 
@@ -27,7 +27,7 @@ fn main() {
         1
     };
     match tail_all(&args[1]) {
-        Ok(()) => (),
+        Ok(()) => println!("{}", line),
         Err(err) => println!("Error: {}", err.to_string()),
     }
 }
