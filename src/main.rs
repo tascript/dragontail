@@ -11,7 +11,7 @@ fn main() {
     opts.optflag("f", "", "follow　postscript");
     opts.optopt("n", "number", "number of lines", "NUMBER");
     opts.optopt("c", "color", "change color to string", "COLOR");
-    opts.optopt("w", "word", "highliht the word", "WORD");
+    opts.optopt("w", "word", "highlit the word", "WORD");
 
     let arguments = match opts.parse(&args[1..]) {
         Ok(m) => m,
