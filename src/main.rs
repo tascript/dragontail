@@ -3,6 +3,7 @@ use getopts::Options;
 use std::env;
 use std::fs::File;
 use std::io::prelude::*;
+use std::io::{self, BufReader};
 use std::process;
 
 fn main() {
@@ -24,9 +25,9 @@ fn main() {
         };
         l.parse().unwrap()
     } else {
-        1
+        10
     };
-    match tail_all(&args[1]) {
+    match tail_with_line(&args[1], line) {
         Ok(()) => (),
         Err(err) => println!("Error: {}", err.to_string()),
     }
@@ -40,6 +41,11 @@ fn tail_all(file_name: &String) -> Result<(), std::io::Error> {
     Ok(())
 }
 
-fn tail_line(file_name: &String, number: i32) -> Result<(), std::io::Error> {
+fn tail_with_line(file_name: &String, number: i32) -> Result<(), std::io::Error> {
+    let file = File::open(file_name)?;
+    let f = BufReader::new(file);
+    for line in f.lines() {
+        println!("{}", line.unwrap());
+    }
     Ok(())
 }
