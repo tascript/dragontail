@@ -17,7 +17,7 @@ fn main() {
         Ok(m) => m,
         Err(why) => panic!("Error: {}", why),
     };
-    let line = if arguments.opt_present("n") {
+    let line: i32 = if arguments.opt_present("n") {
         let l = match arguments.opt_str("n") {
             Some(num) => num,
             None => panic!("check your number of lines."),
