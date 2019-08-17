@@ -47,12 +47,24 @@ fn tail_with_line(file_name: &String, line: i32) -> Result<(), std::io::Error> {
     let file = File::open(file_name)?;
     let mmap = unsafe { MmapOptions::new().map(&file)? };
     let f = BufReader::new(file);
+    println!("{:?}", b"\n"[0]);
     for line in f.lines() {
         println!("{}", line.unwrap());
     }
     Ok(())
 }
 
-fn get_start_pos(mmap: &memmap::Mmap, character_num: i32,  newline_counter: i32) -> usize {
-    return 1
+fn get_start_pos(mmap: &memmap::Mmap, character_num: usize, line: i32) -> usize {
+    let mut i = character_num - 1;
+    let mut newline_num = line;
+    loop {
+        if i < 0 {
+            break;
+        }
+        if &mmap[i..i + 1] == b"\n" {
+            newline_num -= 1;
+        }
+        i -= 1;
+    }
+    i
 }
