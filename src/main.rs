@@ -49,6 +49,7 @@ fn tail_with_line(file_name: &String, line: i32) -> Result<(), std::io::Error> {
     let char_length = mmap.len() as usize;
     let start: usize = get_start_pos(&mmap, char_length, line);
     let buf = mmap[start..char_length].to_vec();
+    print_buf(buf);
     Ok(())
 }
 
@@ -61,11 +62,27 @@ fn get_start_pos(mmap: &memmap::Mmap, character_num: usize, line: i32) -> usize 
         }
         if &mmap[i..(i + 1)] == b"\n" {
             newline_num -= 1;
-            if newline_num < 0 {
+            if newline_num <= 0 {
                 break;
             }
         }
         i -= 1;
     }
     i
+}
+
+fn print_buf(buf: Vec<u8>) {
+    for line in buf.split(|x| *x == b'\n') {
+        match encode(line) {
+            Some(encoded) => println!("{}", encoded),
+            None => panic!("encode error."),
+        }
+    }
+}
+
+fn encode(buf: &[u8]) -> Option<String> {
+    match String::from_utf8(buf.to_vec()) {
+        Ok(result) => Some(result),
+        FromUtf8Error => None,
+    }
 }
