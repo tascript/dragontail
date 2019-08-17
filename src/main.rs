@@ -63,6 +63,9 @@ fn get_start_pos(mmap: &memmap::Mmap, character_num: usize, line: i32) -> usize 
         }
         if &mmap[i..i + 1] == b"\n" {
             newline_num -= 1;
+            if newline_num < 0 {
+                break;
+            }
         }
         i -= 1;
     }
