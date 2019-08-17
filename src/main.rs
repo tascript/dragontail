@@ -46,11 +46,9 @@ fn tail_all(file_name: &String) -> Result<(), std::io::Error> {
 fn tail_with_line(file_name: &String, line: i32) -> Result<(), std::io::Error> {
     let file = File::open(file_name)?;
     let mmap = unsafe { MmapOptions::new().map(&file)? };
-    let f = BufReader::new(file);
-    println!("{:?}", b"\n"[0]);
-    for line in f.lines() {
-        println!("{}", line.unwrap());
-    }
+    let char_length = mmap.len() as usize;
+    let start: usize = get_start_pos(&mmap, char_length, line);
+    let buf = mmap[start..char_length].to_vec();
     Ok(())
 }
 
@@ -58,10 +56,10 @@ fn get_start_pos(mmap: &memmap::Mmap, character_num: usize, line: i32) -> usize 
     let mut i = character_num - 1;
     let mut newline_num = line;
     loop {
-        if i < 0 {
+        if i <= 0 {
             break;
         }
-        if &mmap[i..i + 1] == b"\n" {
+        if &mmap[i..(i + 1)] == b"\n" {
             newline_num -= 1;
             if newline_num < 0 {
                 break;
