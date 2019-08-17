@@ -1,4 +1,5 @@
 extern crate getopts;
+extern crate memmap;
 use getopts::Options;
 use memmap::MmapOptions;
 use std::env;
@@ -50,4 +51,8 @@ fn tail_with_line(file_name: &String, line: i32) -> Result<(), std::io::Error> {
         println!("{}", line.unwrap());
     }
     Ok(())
+}
+
+fn get_start_pos(mmap: &memmap::Mmap, character_num: i32,  newline_counter: i32) -> usize {
+    return 1
 }
