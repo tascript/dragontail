@@ -11,7 +11,7 @@ use std::process;
 fn main() {
     let args: Vec<String> = env::args().collect();
     let mut opts = Options::new();
-    opts.optflag("f", "", "follow　postscript");
+    opts.optflag("f", "", "follow　change of file");
     opts.optopt("n", "number", "number of lines", "NUMBER");
     opts.optopt("c", "color", "change color to string", "COLOR");
     opts.optopt("w", "word", "highlight the word", "WORD");
