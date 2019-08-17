@@ -42,7 +42,7 @@ fn tail_all(file_name: &String) -> Result<(), std::io::Error> {
     Ok(())
 }
 
-fn tail_with_line(file_name: &String, number: i32) -> Result<(), std::io::Error> {
+fn tail_with_line(file_name: &String, line: i32) -> Result<(), std::io::Error> {
     let file = File::open(file_name)?;
     let mmap = unsafe { MmapOptions::new().map(&file)? };
     let f = BufReader::new(file);
