@@ -36,14 +36,6 @@ fn main() {
     }
 }
 
-fn tail_all(file_name: &String) -> Result<(), std::io::Error> {
-    let mut file = File::open(file_name)?;
-    let mut contents = String::new();
-    file.read_to_string(&mut contents)?;
-    println!("{}", contents);
-    Ok(())
-}
-
 fn tail_with_line(file_name: &String, line: i32) -> Result<(), std::io::Error> {
     let file = File::open(file_name)?;
     let mmap = unsafe { MmapOptions::new().map(&file)? };
