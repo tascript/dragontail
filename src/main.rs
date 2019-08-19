@@ -29,9 +29,11 @@ fn main() {
     } else {
         10
     };
-    match tail_with_line(&args[1], line) {
-        Ok(()) => (),
-        Err(err) => println!("Error: {}", err.to_string()),
+    if !arguments.opt_present("f") {
+        match tail_with_line(&args[1], line) {
+            Ok(()) => (),
+            Err(err) => println!("Error: {}", err.to_string()),
+        }
     }
 }
 
