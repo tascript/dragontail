@@ -4,7 +4,6 @@ use getopts::Options;
 use memmap::MmapOptions;
 use std::env;
 use std::fs::File;
-use std::io::prelude::*;
 use std::process;
 
 fn main() {
