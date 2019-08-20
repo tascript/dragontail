@@ -2,8 +2,13 @@ extern crate getopts;
 extern crate memmap;
 use getopts::Options;
 use memmap::MmapOptions;
-use std::env;
 use std::fs::File;
+use std::{env, thread, time};
+
+struct ReadBufResult {
+    buf: Vec<u8>,
+    length: usize,
+}
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -31,6 +36,8 @@ fn main() {
             Ok(()) => (),
             Err(err) => println!("Error: {}", err.to_string()),
         }
+    } else {
+        tail_follow(&args[1], line);
     }
 }
 
@@ -78,4 +85,48 @@ fn encode(buf: &[u8]) -> Option<String> {
     }
 }
 
-fn tail_follow() {}
+fn tail_follow(file_name: &String, line: i32) {
+    let file = match File::open(file_name) {
+        Ok(result) => result,
+        Err(e) => panic!("error: {}", e),
+    };
+    let mmap = unsafe {
+        match MmapOptions::new().map(&file) {
+            Ok(result) => result,
+            Err(e) => panic!("error: {}", e),
+        }
+    };
+    let mut char_length = mmap.len() as usize;
+    let start: usize = get_start_pos(&mmap, char_length, line);
+    let buf = mmap[start..char_length].to_vec();
+    print_buf(buf);
+    loop {
+        match read_the_rest(file_name, char_length) {
+            Some(result) => {
+                print_buf(result.buf);
+                char_length = result.length;
+            }
+            None => {
+                thread::sleep(time::Duration::from_secs(1));
+            }
+        }
+    }
+}
+
+fn read_the_rest(file_name: &String, start_pos: usize) -> Option<ReadBufResult> {
+    let file = match File::open(file_name) {
+        Ok(result) => result,
+        Err(e) => panic!("error: {}", e),
+    };
+    let mmap = unsafe {
+        match MmapOptions::new().map(&file) {
+            Ok(result) => result,
+            Err(e) => panic!("error: {}", e),
+        }
+    };
+    let length = mmap.len() as usize;
+    Some(ReadBufResult {
+        buf: mmap[start_pos..length].to_vec(),
+        length,
+    })
+}
