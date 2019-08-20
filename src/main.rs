@@ -27,14 +27,14 @@ fn main() {
         10
     };
     if !arguments.opt_present("f") {
-        match tail_with_line(&args[1], line) {
+        match tail(&args[1], line) {
             Ok(()) => (),
             Err(err) => println!("Error: {}", err.to_string()),
         }
     }
 }
 
-fn tail_with_line(file_name: &String, line: i32) -> Result<(), std::io::Error> {
+fn tail(file_name: &String, line: i32) -> Result<(), std::io::Error> {
     let file = File::open(file_name)?;
     let mmap = unsafe { MmapOptions::new().map(&file)? };
     let char_length = mmap.len() as usize;
@@ -78,6 +78,4 @@ fn encode(buf: &[u8]) -> Option<String> {
     }
 }
 
-fn tail_follow() {
-    
-}
+fn tail_follow() {}
