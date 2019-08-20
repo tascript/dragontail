@@ -77,3 +77,7 @@ fn encode(buf: &[u8]) -> Option<String> {
         FromUtf8Error => None,
     }
 }
+
+fn tail_follow() {
+    
+}
