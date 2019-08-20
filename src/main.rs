@@ -125,6 +125,9 @@ fn read_the_rest(file_name: &String, start_pos: usize) -> Option<ReadBufResult> 
         }
     };
     let length = mmap.len() as usize;
+    if length <= start_pos {
+        return None;
+    }
     Some(ReadBufResult {
         buf: mmap[start_pos..length].to_vec(),
         length,
