@@ -31,23 +31,27 @@ fn main() {
         10
     };
     if !arguments.opt_present("f") {
-        match tail(&args[1], line) {
-            Ok(()) => (),
-            Err(err) => println!("Error: {}", err.to_string()),
-        }
+        tail(&args[1], line) 
     } else {
         tail_follow(&args[1], line);
     }
 }
 
-fn tail(file_name: &String, line: i32) -> Result<(), std::io::Error> {
-    let file = File::open(file_name)?;
-    let mmap = unsafe { MmapOptions::new().map(&file)? };
+fn tail(file_name: &String, line: i32) {
+    let file = match File::open(file_name) {
+        Ok(result) => result,
+        Err(e) => panic!("error: {}", e),
+    };
+    let mmap = unsafe {
+        match MmapOptions::new().map(&file) {
+            Ok(result) => result,
+            Err(e) => panic!("error: {}", e),
+        }
+    };
     let char_length = mmap.len() as usize;
     let start: usize = get_start_pos(&mmap, char_length, line);
     let buf = mmap[start..char_length].to_vec();
     print_buf(buf);
-    Ok(())
 }
 
 fn get_start_pos(mmap: &memmap::Mmap, character_num: usize, line: i32) -> usize {
