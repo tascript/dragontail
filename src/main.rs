@@ -15,7 +15,6 @@ fn main() {
     let mut opts = Options::new();
     opts.optflag("f", "", "follow　change of file");
     opts.optopt("n", "number", "number of lines", "NUMBER");
-    opts.optopt("c", "color", "change color to string", "COLOR");
     opts.optopt("w", "word", "highlight the word", "WORD");
 
     let arguments = match opts.parse(&args[1..]) {
