@@ -31,27 +31,10 @@ fn main() {
         10
     };
     if !arguments.opt_present("f") {
-        tail(&args[1], line) 
+        tail(&args[1], line)
     } else {
         tail_follow(&args[1], line);
     }
-}
-
-fn tail(file_name: &String, line: i32) {
-    let file = match File::open(file_name) {
-        Ok(result) => result,
-        Err(e) => panic!("error: {}", e),
-    };
-    let mmap = unsafe {
-        match MmapOptions::new().map(&file) {
-            Ok(result) => result,
-            Err(e) => panic!("error: {}", e),
-        }
-    };
-    let char_length = mmap.len() as usize;
-    let start: usize = get_start_pos(&mmap, char_length, line);
-    let buf = mmap[start..char_length].to_vec();
-    print_buf(buf);
 }
 
 fn get_start_pos(mmap: &memmap::Mmap, character_num: usize, line: i32) -> usize {
@@ -72,6 +55,20 @@ fn get_start_pos(mmap: &memmap::Mmap, character_num: usize, line: i32) -> usize 
     i
 }
 
+fn get_mapped_file(file_name: &String) -> memmap::Mmap {
+    let file = match File::open(file_name) {
+        Ok(result) => result,
+        Err(e) => panic!("error: {}", e),
+    };
+    let mmap = unsafe {
+        match MmapOptions::new().map(&file) {
+            Ok(result) => result,
+            Err(e) => panic!("error: {}", e),
+        }
+    };
+    mmap
+}
+
 fn print_buf(buf: Vec<u8>) {
     for line in buf.split(|x| *x == b'\n') {
         match encode(line) {
@@ -88,17 +85,16 @@ fn encode(buf: &[u8]) -> Option<String> {
     }
 }
 
+fn tail(file_name: &String, line: i32) {
+    let mmap = get_mapped_file(file_name);
+    let char_length = mmap.len() as usize;
+    let start: usize = get_start_pos(&mmap, char_length, line);
+    let buf = mmap[start..char_length].to_vec();
+    print_buf(buf);
+}
+
 fn tail_follow(file_name: &String, line: i32) {
-    let file = match File::open(file_name) {
-        Ok(result) => result,
-        Err(e) => panic!("error: {}", e),
-    };
-    let mmap = unsafe {
-        match MmapOptions::new().map(&file) {
-            Ok(result) => result,
-            Err(e) => panic!("error: {}", e),
-        }
-    };
+    let mmap = get_mapped_file(file_name);
     let mut char_length = mmap.len() as usize;
     let start: usize = get_start_pos(&mmap, char_length, line);
     let buf = mmap[start..char_length].to_vec();
