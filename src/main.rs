@@ -1,10 +1,8 @@
 extern crate getopts;
 extern crate memmap;
-extern crate regex;
 extern crate termcolor;
 use getopts::Options;
 use memmap::MmapOptions;
-use regex::Regex;
 use std::fs::File;
 use std::{env, thread, time};
 use termcolor::{Color, ColorChoice, ColorSpec, StandardStream, WriteColor};
@@ -78,9 +76,17 @@ fn print_buf(buf: Vec<u8>, keywords: &Vec<String>) {
         match encode(line) {
             Some(encoded) => {
                 println!("{}", encoded);
+                // regex_keywords(&encoded, keywords);
             }
             None => panic!("encode error."),
         }
+    }
+}
+
+fn regex_keywords(text: &String, keywords: &Vec<String>) {
+    for kw in keywords {
+        let v: Vec<_> = text.match_indices(kw).collect();
+        println!("{:?}", v);
     }
 }
 
