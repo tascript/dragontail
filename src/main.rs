@@ -19,7 +19,6 @@ fn main() {
     let mut opts = Options::new();
     opts.optflag("f", "", "follow　change of file");
     opts.optopt("n", "number", "number of lines", "NUMBER");
-    opts.optopt("w", "word", "highlight the word", "WORD");
 
     let arguments = match opts.parse(&args[1..]) {
         Ok(m) => m,
@@ -34,10 +33,11 @@ fn main() {
     } else {
         10
     };
+    let keywords = &arguments.free[1..].to_vec();
     if !arguments.opt_present("f") {
-        tail(&args[1], line)
+        tail(&arguments.free[0], line, keywords)
     } else {
-        tail_follow(&args[1], line);
+        tail_follow(&args[1], line, keywords);
     }
 }
 
@@ -73,10 +73,12 @@ fn get_mapped_file(file_name: &String) -> memmap::Mmap {
     mmap
 }
 
-fn print_buf(buf: Vec<u8>) {
+fn print_buf(buf: Vec<u8>, keywords: &Vec<String>) {
     for line in buf.split(|x| *x == b'\n') {
         match encode(line) {
-            Some(encoded) => println!("{}", encoded),
+            Some(encoded) => {
+                println!("{}", encoded);
+            }
             None => panic!("encode error."),
         }
     }
@@ -89,24 +91,24 @@ fn encode(buf: &[u8]) -> Option<String> {
     }
 }
 
-fn tail(file_name: &String, line: i32) {
+fn tail(file_name: &String, line: i32, keywords: &Vec<String>) {
     let mmap = get_mapped_file(file_name);
     let char_length = mmap.len() as usize;
     let start: usize = get_start_pos(&mmap, char_length, line);
     let buf = mmap[start..char_length].to_vec();
-    print_buf(buf);
+    print_buf(buf, keywords);
 }
 
-fn tail_follow(file_name: &String, line: i32) {
+fn tail_follow(file_name: &String, line: i32, keywords: &Vec<String>) {
     let mmap = get_mapped_file(file_name);
     let mut char_length = mmap.len() as usize;
     let start: usize = get_start_pos(&mmap, char_length, line);
     let buf = mmap[start..char_length].to_vec();
-    print_buf(buf);
+    print_buf(buf, keywords);
     loop {
         match read_the_rest(file_name, char_length) {
             Some(result) => {
-                print_buf(result.buf);
+                print_buf(result.buf, keywords);
                 char_length = result.length;
             }
             None => {
