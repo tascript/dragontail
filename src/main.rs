@@ -1,8 +1,10 @@
 extern crate getopts;
 extern crate memmap;
+extern crate regex;
 extern crate termcolor;
 use getopts::Options;
 use memmap::MmapOptions;
+use regex::Regex;
 use std::fs::File;
 use std::{env, thread, time};
 use termcolor::{Color, ColorChoice, ColorSpec, StandardStream, WriteColor};
