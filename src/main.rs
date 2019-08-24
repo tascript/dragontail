@@ -77,18 +77,23 @@ fn print_buf(buf: Vec<u8>, keywords: &Vec<String>) {
         match encode(line) {
             Some(encoded) => {
                 println!("{}", encoded);
-                // regex_keywords(&encoded, keywords);
+                // match_keywords(&encoded, keywords);
             }
             None => panic!("encode error."),
         }
     }
 }
 
-fn regex_keywords(text: &String, keywords: &Vec<String>) {
+fn match_keywords(text: &String, keywords: &Vec<String>) {
+    let mut matches: Vec<(usize, &str)> = vec![];
     for kw in keywords {
-        let v: Vec<_> = text.match_indices(kw).collect();
-        println!("{:?}", v);
+        let mut m: Vec<_> = text.match_indices(kw).collect();
+        if m.len() > 0 {
+            matches.append(&mut m);
+        }
     }
+    matches.sort_by_key(|k| k.0);
+    println!("{:?}", matches);
 }
 
 fn encode(buf: &[u8]) -> Option<String> {
