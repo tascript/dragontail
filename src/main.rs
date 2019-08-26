@@ -77,7 +77,7 @@ fn print_buf(buf: Vec<u8>, keywords: &Vec<String>) {
         match encode(line) {
             Some(encoded) => {
                 println!("{}", encoded);
-                // match_keywords(&encoded, keywords);
+                match_keywords(&encoded, keywords);
             }
             None => panic!("encode error."),
         }
