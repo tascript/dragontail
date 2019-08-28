@@ -84,7 +84,7 @@ fn print_buf(buf: Vec<u8>, keywords: &Vec<String>) {
     }
 }
 
-fn match_keywords(text: &String, keywords: &Vec<String>) {
+fn match_keywords<'a>(text: &'a String, keywords: &Vec<String>) -> Vec<(usize, &'a str)> {
     let mut matches: Vec<(usize, &str)> = vec![];
     for kw in keywords {
         let mut m: Vec<_> = text.match_indices(kw).collect();
@@ -93,7 +93,7 @@ fn match_keywords(text: &String, keywords: &Vec<String>) {
         }
     }
     matches.sort_by_key(|k| k.0);
-    println!("{:?}", matches);
+    matches
 }
 
 fn encode(buf: &[u8]) -> Option<String> {
