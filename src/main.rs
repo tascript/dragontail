@@ -76,7 +76,6 @@ fn print_buf(buf: Vec<u8>, keywords: &Vec<String>) {
     for line in buf.split(|x| *x == b'\n') {
         match encode(line) {
             Some(encoded) => {
-                // println!("{}", encoded);
                 let splited_line = split_line_by_keywords(&encoded, keywords);
                 print_colored_line(splited_line, keywords);
             }
