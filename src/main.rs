@@ -77,15 +77,14 @@ fn print_buf(buf: Vec<u8>, keywords: &Vec<String>) {
         match encode(line) {
             Some(encoded) => {
                 println!("{}", encoded);
-                let matches = match_keywords(&encoded, keywords);
-                println!("{:?}", matches);
+                split_line_by_keywords(&encoded, keywords);
             }
             None => panic!("encode error."),
         }
     }
 }
 
-fn match_keywords<'a>(text: &'a String, keywords: &Vec<String>) -> Vec<(usize, &'a str)> {
+fn split_line_by_keywords(text: &String, keywords: &Vec<String>) {
     let mut matches: Vec<(usize, &str)> = vec![];
     for kw in keywords {
         let mut m: Vec<_> = text.match_indices(kw).collect();
@@ -94,7 +93,17 @@ fn match_keywords<'a>(text: &'a String, keywords: &Vec<String>) -> Vec<(usize, &
         }
     }
     matches.sort_by_key(|k| k.0);
-    matches
+    let mut split_line: Vec<&str> = vec![];
+    let mut count: usize = 0;
+    for m in matches {
+        split_line.push(&text[count..m.0]);
+        split_line.push(&text[m.0..(m.0 + m.1.len())]);
+        count = m.0 + m.1.len();
+    }
+    if count != text.len() {
+        split_line.push(&text[count..]);
+    }
+    println!("{:?}", split_line);
 }
 
 fn encode(buf: &[u8]) -> Option<String> {
