@@ -84,10 +84,10 @@ fn print_buf(buf: Vec<u8>, keywords: &Vec<String>) {
     }
 }
 
-fn split_line_by_keywords(text: &String, keywords: &Vec<String>) {
+fn split_line_by_keywords(line: &String, keywords: &Vec<String>) {
     let mut matches: Vec<(usize, &str)> = vec![];
     for kw in keywords {
-        let mut m: Vec<_> = text.match_indices(kw).collect();
+        let mut m: Vec<_> = line.match_indices(kw).collect();
         if m.len() > 0 {
             matches.append(&mut m);
         }
@@ -96,12 +96,12 @@ fn split_line_by_keywords(text: &String, keywords: &Vec<String>) {
     let mut split_line: Vec<&str> = vec![];
     let mut count: usize = 0;
     for m in matches {
-        split_line.push(&text[count..m.0]);
-        split_line.push(&text[m.0..(m.0 + m.1.len())]);
+        split_line.push(&line[count..m.0]);
+        split_line.push(&line[m.0..(m.0 + m.1.len())]);
         count = m.0 + m.1.len();
     }
-    if count != text.len() {
-        split_line.push(&text[count..]);
+    if count != line.len() {
+        split_line.push(&line[count..]);
     }
     println!("{:?}", split_line);
 }
