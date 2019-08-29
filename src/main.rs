@@ -76,15 +76,16 @@ fn print_buf(buf: Vec<u8>, keywords: &Vec<String>) {
     for line in buf.split(|x| *x == b'\n') {
         match encode(line) {
             Some(encoded) => {
-                println!("{}", encoded);
-                split_line_by_keywords(&encoded, keywords);
+                // println!("{}", encoded);
+                let splited_line = split_line_by_keywords(&encoded, keywords);
+                print_colored_line(splited_line, keywords);
             }
             None => panic!("encode error."),
         }
     }
 }
 
-fn split_line_by_keywords(line: &String, keywords: &Vec<String>) {
+fn split_line_by_keywords<'a>(line: &'a String, keywords: &Vec<String>) -> Vec<&'a str> {
     let mut matches: Vec<(usize, &str)> = vec![];
     for kw in keywords {
         let mut m: Vec<_> = line.match_indices(kw).collect();
@@ -93,17 +94,41 @@ fn split_line_by_keywords(line: &String, keywords: &Vec<String>) {
         }
     }
     matches.sort_by_key(|k| k.0);
-    let mut split_line: Vec<&str> = vec![];
+    let mut result: Vec<&str> = vec![];
     let mut count: usize = 0;
     for m in matches {
-        split_line.push(&line[count..m.0]);
-        split_line.push(&line[m.0..(m.0 + m.1.len())]);
+        result.push(&line[count..m.0]);
+        result.push(&line[m.0..(m.0 + m.1.len())]);
         count = m.0 + m.1.len();
     }
     if count != line.len() {
-        split_line.push(&line[count..]);
+        result.push(&line[count..]);
     }
-    println!("{:?}", split_line);
+    result
+}
+
+fn print_colored_line(splited_line: Vec<&str>, keywords: &Vec<String>) {
+    let mut stdout = StandardStream::stdout(ColorChoice::Always);
+    let len = splited_line.len();
+    for i in 0..len {
+        for kw in keywords {
+            if splited_line[i] == kw {
+                stdout
+                    .set_color(ColorSpec::new().set_fg(Some(Color::Green)))
+                    .unwrap();
+                break;
+            } else {
+                stdout
+                    .set_color(ColorSpec::new().set_fg(Some(Color::White)))
+                    .unwrap();
+            }
+        }
+        if i != (len - 1) {
+            write!(&mut stdout, "{}", splited_line[i]).unwrap();
+        } else {
+            writeln!(&mut stdout, "{}", splited_line[i]).unwrap();
+        }
+    }
 }
 
 fn encode(buf: &[u8]) -> Option<String> {
