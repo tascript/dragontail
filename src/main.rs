@@ -4,7 +4,7 @@ extern crate termcolor;
 use getopts::Options;
 use memmap::MmapOptions;
 use std::fs::File;
-use std::io::{stdout, Write};
+use std::io::Write;
 use std::{env, thread, time};
 use termcolor::{Color, ColorChoice, ColorSpec, StandardStream, WriteColor};
 
