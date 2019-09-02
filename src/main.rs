@@ -58,6 +58,8 @@ fn get_start_pos(mmap: &memmap::Mmap, character_num: usize, line: i32) -> usize 
     i
 }
 
+fn get_unique_arguments() {}
+
 fn get_mapped_file(file_name: &String) -> memmap::Mmap {
     let file = match File::open(file_name) {
         Ok(result) => result,
