@@ -2,6 +2,7 @@ extern crate getopts;
 extern crate memmap;
 extern crate termcolor;
 use getopts::Options;
+use itertools::Itertools;
 use memmap::MmapOptions;
 use std::fs::File;
 use std::io::Write;
@@ -32,11 +33,11 @@ fn main() {
     } else {
         10
     };
-    let keywords = &arguments.free[1..].to_vec();
+    let keywords = get_correct_keywords(&arguments.free[1..].to_vec());
     if !arguments.opt_present("f") {
-        tail(&arguments.free[0], line, keywords)
+        tail(&arguments.free[0], line, &keywords)
     } else {
-        tail_follow(&args[1], line, keywords);
+        tail_follow(&args[1], line, &keywords);
     }
 }
 
@@ -58,17 +59,27 @@ fn get_start_pos(mmap: &memmap::Mmap, character_num: usize, line: i32) -> usize 
     i
 }
 
-fn get_correct_keywords(keywords: &Vec<String>) -> Vec<&String> {
-    let mut res: Vec<&String> = vec![];
+fn get_correct_keywords(keywords: &Vec<String>) -> Vec<String> {
+    let mut res: Vec<String> = vec![];
     for (index, value) in keywords.iter().enumerate() {
-        for i in (index + 1)..(keywords.len() - 1) {
-            if keywords[i].find(value).is_some() {
-                res.push(&keywords[i]);
+        let mut hoge = false;
+        for i in 0..(keywords.len()) {
+            if keywords[i].find(value).is_some() && index != i {
+                res.push(keywords[i].to_string());
+                hoge = true;
+                break;
+            }
+            if value.find(&keywords[i]).is_some() && index != i {
+                res.push(value.to_string());
+                hoge = true;
                 break;
             }
         }
+        if !hoge {
+            res.push(value.to_string());
+        }
     }
-    res
+    res.into_iter().unique().collect()
 }
 
 fn get_mapped_file(file_name: &String) -> memmap::Mmap {
