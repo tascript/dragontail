@@ -58,7 +58,18 @@ fn get_start_pos(mmap: &memmap::Mmap, character_num: usize, line: i32) -> usize 
     i
 }
 
-fn get_unique_arguments() {}
+fn get_correct_keywords(keywords: &Vec<String>) -> Vec<&String> {
+    let mut res: Vec<&String> = vec![];
+    for (index, value) in keywords.iter().enumerate() {
+        for i in (index + 1)..(keywords.len() - 1) {
+            if keywords[i].find(value).is_some() {
+                res.push(&keywords[i]);
+                break;
+            }
+        }
+    }
+    res
+}
 
 fn get_mapped_file(file_name: &String) -> memmap::Mmap {
     let file = match File::open(file_name) {
