@@ -155,10 +155,10 @@ fn print_colored_line(splited_line: Vec<&str>, keywords: &Vec<String>) {
 }
 
 fn encode(buf: &[u8]) -> Option<String> {
-    match String::from_utf8(buf.to_vec()) {
-        Ok(result) => Some(result),
-        FromUtf8Error => None,
+    if let Ok(res) = String::from_utf8(buf.to_vec()) {
+        return Some(res)
     }
+    None
 }
 
 fn tail(file_name: &String, line: i32, keywords: &Vec<String>) {
