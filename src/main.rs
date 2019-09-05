@@ -134,11 +134,10 @@ fn print_colored_line(splited_line: Vec<&str>, keywords: &Vec<String>) {
     let mut stdout = StandardStream::stdout(ColorChoice::Always);
     let len = splited_line.len();
     for i in 0..len {
-        for kw in keywords {
+        for (ki, kw) in keywords.iter().enumerate() {
             if splited_line[i] == kw {
-                stdout
-                    .set_color(ColorSpec::new().set_fg(Some(Color::Green)))
-                    .unwrap();
+                let color = get_colors(ki);
+                stdout.set_color(ColorSpec::new().set_fg(color)).unwrap();
                 break;
             } else {
                 stdout
@@ -154,9 +153,22 @@ fn print_colored_line(splited_line: Vec<&str>, keywords: &Vec<String>) {
     }
 }
 
+fn get_colors(index: usize) -> Option<termcolor::Color> {
+    let color_val: usize = 6;
+    match index % color_val {
+        0 => return Some(Color::Blue),
+        1 => return Some(Color::Red),
+        2 => return Some(Color::Green),
+        3 => return Some(Color::Cyan),
+        4 => return Some(Color::Magenta),
+        5 => return Some(Color::Yellow),
+        _ => return Some(Color::White),
+    }
+}
+
 fn encode(buf: &[u8]) -> Option<String> {
     if let Ok(res) = String::from_utf8(buf.to_vec()) {
-        return Some(res)
+        return Some(res);
     }
     None
 }
