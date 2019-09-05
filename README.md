@@ -1,2 +1,2 @@
-# dragon_tail
+# dragontail
 dress up tail command.
