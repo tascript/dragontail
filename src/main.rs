@@ -156,12 +156,12 @@ fn print_colored_line(splited_line: Vec<&str>, keywords: &Vec<String>) {
 fn get_colors(index: usize) -> Option<termcolor::Color> {
     let color_val: usize = 6;
     match index % color_val {
-        0 => return Some(Color::Blue),
-        1 => return Some(Color::Red),
+        0 => return Some(Color::Magenta),
+        1 => return Some(Color::Cyan),
         2 => return Some(Color::Green),
-        3 => return Some(Color::Cyan),
-        4 => return Some(Color::Magenta),
-        5 => return Some(Color::Yellow),
+        3 => return Some(Color::Red),
+        4 => return Some(Color::Yellow),
+        5 => return Some(Color::Blue),
         _ => return Some(Color::White),
     }
 }
