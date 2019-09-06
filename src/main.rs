@@ -162,7 +162,7 @@ fn get_colors(index: usize) -> Option<termcolor::Color> {
         3 => return Some(Color::Red),
         4 => return Some(Color::Yellow),
         5 => return Some(Color::Blue),
-        _ => return Some(Color::White),
+        _ => return None,
     }
 }
 
