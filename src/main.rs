@@ -1,4 +1,4 @@
-// get_start_pos(),get_mapped_file(),print_buf(),encode(),read_the_rest() functions are:
+// get_start_pos(), get_mapped_file(), print_buf(), encode(), read_the_rest() functions are:
 
 // MIT License
 
