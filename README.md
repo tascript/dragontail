@@ -3,6 +3,8 @@
 
 dress up tail command.
 
+## Usage
+
 ## Thanks
 This project was created based on [rtail](https://github.com/nao-kobayashi/rtail)([license](https://github.com/nao-kobayashi/rtail/blob/master/LICENSE))
 
