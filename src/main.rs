@@ -85,20 +85,20 @@ fn get_start_pos(mmap: &memmap::Mmap, character_num: usize, line: i32) -> usize 
 fn get_correct_keywords(keywords: &Vec<String>) -> Vec<String> {
     let mut res: Vec<String> = vec![];
     for (index, value) in keywords.iter().enumerate() {
-        let mut hoge = false;
+        let mut flag = false;
         for i in 0..(keywords.len()) {
             if keywords[i].find(value).is_some() && index != i {
                 res.push(keywords[i].to_string());
-                hoge = true;
+                flag = true;
                 break;
             }
             if value.find(&keywords[i]).is_some() && index != i {
                 res.push(value.to_string());
-                hoge = true;
+                flag = true;
                 break;
             }
         }
-        if !hoge {
+        if !flag {
             res.push(value.to_string());
         }
     }
