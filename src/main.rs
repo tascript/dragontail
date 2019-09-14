@@ -265,3 +265,32 @@ fn read_the_rest(file_name: &String, start_pos: usize) -> Option<ReadBufResult> 
         length,
     })
 }
+
+#[test]
+fn split_line_when_no_keyword() {
+    let line = String::from("Enjoy colored code.");
+    let keyword = get_correct_keywords(&Vec::new());
+    let res = split_line_by_keywords(&line, &keyword);
+    assert_eq!(vec!["Enjoy colored code."], res);
+}
+
+#[test]
+fn split_line_by_single_or_multiple_keywords() {
+    let line = String::from("Enjoy colored code.");
+    let keyword = get_correct_keywords(&vec![String::from("co"), String::from("joy")]);
+    let res = split_line_by_keywords(&line, &keyword);
+    assert_eq!(vec!["En", "joy", " ", "co", "lored ", "co", "de."], res);
+}
+
+#[test]
+fn split_line_by_duplicated_keywords() {
+    let line = String::from("Enjoy colored code.");
+    let keyword = get_correct_keywords(&vec![
+        String::from("joy"),
+        String::from("Enjoy"),
+        String::from("color"),
+        String::from("or"),
+    ]);
+    let res = split_line_by_keywords(&line, &keyword);
+    assert_eq!(vec!["", "Enjoy", " ", "color", "ed code."], res);
+}
