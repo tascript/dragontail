@@ -26,12 +26,11 @@ extern crate getopts;
 extern crate memmap;
 extern crate termcolor;
 use clap::{App, Arg};
-use getopts::Options;
 use itertools::Itertools;
 use memmap::MmapOptions;
 use std::fs::File;
 use std::io::Write;
-use std::{env, thread, time};
+use std::{thread, time};
 use termcolor::{Color, ColorChoice, ColorSpec, StandardStream, WriteColor};
 
 struct ReadBufResult {
@@ -53,45 +52,38 @@ fn main() {
             Arg::with_name("keyword")
                 .value_name("KEYWORD")
                 .help("Keyword")
+                .multiple(true)
                 .required(false),
         )
         .arg(
-            Arg::with_name("fn")
+            Arg::with_name("f")
                 .help("Follow change of file")
-                .short("fn")
+                .short("f")
                 .long("follow"),
         )
         .arg(
             Arg::with_name("n")
                 .help("Number of lines")
                 .short("n")
-                .long("number"),
+                .long("number")
+                .takes_value(true),
         )
         .get_matches();
-    // let args: Vec<String> = env::args().collect();
-    // let mut opts = Options::new();
-    // opts.optflag("f", "", "follow　change of file");
-    // opts.optopt("n", "number", "number of lines", "NUMBER");
-
-    // let arguments = match opts.parse(&args[1..]) {
-    //     Ok(m) => m,
-    //     Err(why) => panic!("Error: {}", why),
-    // };
-    // let line: i32 = if arguments.opt_present("n") {
-    //     let l = match arguments.opt_str("n") {
-    //         Some(num) => num,
-    //         None => panic!("check your number of lines."),
-    //     };
-    //     l.parse().unwrap()
-    // } else {
-    //     10
-    // };
-    // let keywords = get_correct_keywords(&arguments.free[1..].to_vec());
-    // if !arguments.opt_present("f") {
-    //     tail(&arguments.free[0], line, &keywords)
-    // } else {
-    //     tail_follow(&args[1], line, &keywords);
-    // }
+    if let Some(file) = matches.value_of("file") {
+        let line_number = match matches.value_of("n") {
+            Some(n) => n.parse().unwrap(),
+            None => 10,
+        };
+        let keywords = match matches.values_of_lossy("keyword") {
+            Some(k) => get_correct_keywords(&k),
+            None => Vec::new(),
+        };
+        if matches.is_present("f") {
+            tail_follow(&String::from(file), line_number, &keywords);
+        } else {
+            tail(&String::from(file), line_number, &keywords);
+        }
+    }
 }
 
 fn get_start_pos(mmap: &memmap::Mmap, character_num: usize, line: i32) -> usize {
