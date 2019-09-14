@@ -168,7 +168,9 @@ fn split_line_by_keywords<'a>(line: &'a String, keywords: &Vec<String>) -> Vec<&
     let mut result: Vec<&str> = vec![];
     let mut count: usize = 0;
     for m in matches {
-        result.push(&line[count..m.0]);
+        if m.0 != 0 {
+            result.push(&line[count..m.0]);
+        }
         result.push(&line[m.0..(m.0 + m.1.len())]);
         count = m.0 + m.1.len();
     }
@@ -295,7 +297,7 @@ fn split_line_by_duplicated_keywords() {
         String::from("or"),
     ]);
     let res = split_line_by_keywords(&line, &keyword);
-    assert_eq!(vec!["", "Enjoy", " ", "color", "ed code."], res);
+    assert_eq!(vec!["Enjoy", " ", "color", "ed code."], res);
 }
 
 #[test]
