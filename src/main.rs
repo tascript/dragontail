@@ -21,9 +21,11 @@
 /// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
+extern crate clap;
 extern crate getopts;
 extern crate memmap;
 extern crate termcolor;
+use clap::{App, Arg};
 use getopts::Options;
 use itertools::Itertools;
 use memmap::MmapOptions;
@@ -38,30 +40,58 @@ struct ReadBufResult {
 }
 
 fn main() {
-    let args: Vec<String> = env::args().collect();
-    let mut opts = Options::new();
-    opts.optflag("f", "", "follow　change of file");
-    opts.optopt("n", "number", "number of lines", "NUMBER");
+    let matches = App::new("dragontail")
+        .author("wataru-script")
+        .about("Dress up tail command")
+        .arg(
+            Arg::with_name("file")
+                .value_name("FILE")
+                .help("File name")
+                .required(true),
+        )
+        .arg(
+            Arg::with_name("keyword")
+                .value_name("KEYWORD")
+                .help("Keyword")
+                .required(false),
+        )
+        .arg(
+            Arg::with_name("fn")
+                .help("Follow change of file")
+                .short("fn")
+                .long("follow"),
+        )
+        .arg(
+            Arg::with_name("n")
+                .help("Number of lines")
+                .short("n")
+                .long("number"),
+        )
+        .get_matches();
+    // let args: Vec<String> = env::args().collect();
+    // let mut opts = Options::new();
+    // opts.optflag("f", "", "follow　change of file");
+    // opts.optopt("n", "number", "number of lines", "NUMBER");
 
-    let arguments = match opts.parse(&args[1..]) {
-        Ok(m) => m,
-        Err(why) => panic!("Error: {}", why),
-    };
-    let line: i32 = if arguments.opt_present("n") {
-        let l = match arguments.opt_str("n") {
-            Some(num) => num,
-            None => panic!("check your number of lines."),
-        };
-        l.parse().unwrap()
-    } else {
-        10
-    };
-    let keywords = get_correct_keywords(&arguments.free[1..].to_vec());
-    if !arguments.opt_present("f") {
-        tail(&arguments.free[0], line, &keywords)
-    } else {
-        tail_follow(&args[1], line, &keywords);
-    }
+    // let arguments = match opts.parse(&args[1..]) {
+    //     Ok(m) => m,
+    //     Err(why) => panic!("Error: {}", why),
+    // };
+    // let line: i32 = if arguments.opt_present("n") {
+    //     let l = match arguments.opt_str("n") {
+    //         Some(num) => num,
+    //         None => panic!("check your number of lines."),
+    //     };
+    //     l.parse().unwrap()
+    // } else {
+    //     10
+    // };
+    // let keywords = get_correct_keywords(&arguments.free[1..].to_vec());
+    // if !arguments.opt_present("f") {
+    //     tail(&arguments.free[0], line, &keywords)
+    // } else {
+    //     tail_follow(&args[1], line, &keywords);
+    // }
 }
 
 fn get_start_pos(mmap: &memmap::Mmap, character_num: usize, line: i32) -> usize {
