@@ -156,6 +156,9 @@ fn print_buf(buf: Vec<u8>, keywords: &Vec<String>) {
 fn split_line_by_keywords<'a>(line: &'a String, keywords: &Vec<String>) -> Vec<&'a str> {
     let mut matches: Vec<(usize, &str)> = vec![];
     for kw in keywords {
+        if kw == "" {
+            continue;
+        }
         let mut m: Vec<_> = line.match_indices(kw).collect();
         if m.len() > 0 {
             matches.append(&mut m);
@@ -293,4 +296,12 @@ fn split_line_by_duplicated_keywords() {
     ]);
     let res = split_line_by_keywords(&line, &keyword);
     assert_eq!(vec!["", "Enjoy", " ", "color", "ed code."], res);
+}
+
+#[test]
+fn split_line_by_empty_string_keywords() {
+    let line = String::from("Enjoy colored code.");
+    let keyword = get_correct_keywords(&vec![String::from("")]);
+    let res = split_line_by_keywords(&line, &keyword);
+    assert_eq!(vec!["Enjoy colored code."], res);
 }
