@@ -183,13 +183,6 @@ fn split_line_by_keywords<'a>(line: &'a String, keywords: &Vec<String>) -> Vec<&
 fn print_colored_line(splited_line: Vec<&str>, keywords: &Vec<String>) {
     let mut stdout = StandardStream::stdout(ColorChoice::Always);
     let len = splited_line.len();
-    if splited_line.len() == 0 {
-        stdout
-            .set_color(ColorSpec::new().set_fg(Some(Color::White)))
-            .unwrap();
-        write!(&mut stdout, "{}", "\n").unwrap();
-        return;
-    }
     for i in 0..len {
         for (ki, kw) in keywords.iter().enumerate() {
             if splited_line[i] == kw {
