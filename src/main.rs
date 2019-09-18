@@ -153,6 +153,8 @@ fn print_buf(buf: Vec<u8>, keywords: &Vec<String>) {
     }
 }
 
+fn split_by_new_line() {}
+
 fn split_line_by_keywords<'a>(line: &'a String, keywords: &Vec<String>) -> Vec<&'a str> {
     let mut matches: Vec<(usize, &str)> = vec![];
     for kw in keywords {
